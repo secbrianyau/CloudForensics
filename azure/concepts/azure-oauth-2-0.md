@@ -1,5 +1,14 @@
 # Azure Authentication - OAuth 2.0
 
+Contents
+
+- [Azure Authentication - OAuth 2.0](#azure-authentication---oauth-20)
+  - [OAuth Token](#oauth-token)
+  - [2FA Defense to traditional phishing](#2fa-defense-to-traditional-phishing)
+  - [Adversary-in-the-middle (AitM) phishing attack](#adversary-in-the-middle-aitm-phishing-attack)
+  - [Pass-the-cookie attack](#pass-the-cookie-attack)
+  - [References](#references)
+
 ---
 
 ## OAuth Token
@@ -58,6 +67,28 @@ With traditional credential phishing, the attacker may use the credentials they 
 
 - Commodity credential theft malware like Emotet, Redline, IcedID, and more all have built-in functionality to extract and exfiltrate browser cookies. 
 - Additionally, the attacker does not have to know the compromised account password or even the email address for this to work — those details are held within the cookie.
+
+---
+
+## Protection
+
+- Full visibility of where and how their users are authenticating
+- To access critical applications like Exchange Online or SharePoint, the device used should be known by the organization
+  - Device control (e.g. InTune): make sure devices are well-protected by patch manager, EDR, AV, etc
+  - Device-based access conditional control policies
+  - [Allow known-devices only](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
+  - [Intune Security Baseline](https://learn.microsoft.com/en-us/mem/intune/protect/security-baselines)
+- Session conditional access policies and other compensating controls to reduce the impact of token theft
+  - [Reducing the lifetime of the session](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-session)
+    - Reducing the viable time of a token  
+  - [Conditional Access App Control in Microsoft Defender for Cloud Apps](https://learn.microsoft.com/en-us/defender-cloud-apps/proxy-intro-aad)
+- Risk-based Approach:
+  - Highly privileged users like Global Administrators, Service Administrators, Authentication Administrators, and Billing Administrators among others.
+  - Finance and treasury type applications that are attractive targets for attackers seeking financial gain.
+  - Human capital management (HCM) applications containing personally identifiable information that may be targeted for exfiltration.
+  - Control and management plane access to Microsoft 365 Defender, Azure, Office 365 and other cloud app administrative portals.
+  - Access to Office 365 services (Exchange, SharePoint, and Teams) and productivity-based cloud apps.
+  - VPN or remote access portals that provide external access to organizational resources. 
 
 ---
 
