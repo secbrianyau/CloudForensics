@@ -92,6 +92,48 @@ With traditional credential phishing, the attacker may use the credentials they 
 
 ---
 
+## Detection
+
+- When a token is replayed, the sign-in from the threat actor can flag anomalous features and impossible travel alerts
+  - [Microsoft Solution: Azure Active Directory Identity Protection](https://learn.microsoft.com/azure/active-directory/identity-protection/concept-identity-protection-risks#sign-in-risk)
+  - [Microsoft Solution: Microsoft Defender for Cloud Apps](https://learn.microsoft.com/defender-cloud-apps/investigate-anomaly-alerts)
+    - specific detection for anomalous token events tuned to incur more noise than other alerts
+  - DART recommends focusing on:
+    - high severity alerts and 
+    - those users who trigger multiple alerts rapidly.  
+  - ATT&CK-based
+
+- Critical events
+  - Modification or creation of security configurations
+  - Modification or creation of Exchange transport rules
+  - Modification or creation of privileged users or roles
+
+---
+
+## Incident Response
+
+- [Revoke Refresh Token](https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/users-revoke-access)
+  - Once a refresh token is revoked, it’s no longer valid. 
+  - When the associated access token expires, the user will be prompted to re-authenticate.
+  - **IMPORTANT** Resetting the user password is **NOT** enough - Use **BOTH** the Azure AD portal, Microsoft Graph, or Azure AD PowerShell 
+  - **IMPORTANT** Revoking refresh tokens via the above methods doesn't invalidate the access token immediately, which can still be valid for **up to an hour**
+
+![image](https://user-images.githubusercontent.com/90521014/202804032-ed358017-6c4d-497a-8215-877d3b1c8001.png)
+
+- Compromise Assessment
+  - Mailbox rules – threat actors often create specific mailbox rules to forward or hide email. These can include rules to hide emails in folders that are not often used. For example, a threat actor may forward all emails containing the keyword ‘invoice’ to the Archive folder to hide them from the user or forward them to an external email address.
+  - Mailbox forwarding – email forwarding may be configured to send a copy of all email to an external email address. This allows the threat actor to silently retrieve a copy of every email the user receives.
+  - Multifactor authentication modification – DART has detected instances of threat actors registering additional authentication methods against compromised accounts for use with MFA, such as phone numbers or authenticator apps.
+  - Device enrollment – in some cases, DART has seen threat actors add a device to an Azure AD tenant they control. This is an attempt to bypass conditional access rules with exclusions such as known devices.
+  - Data exfiltration – threat actors may use the inbuilt sharing functionality in SharePoint and OneDrive to share important or sensitive documents and organizational resources externally.
+
+Incident responders should review any audit logs related to user activity to look for signs of persistence. Logs available in:
+
+- the Unified Audit Log
+- Microsoft Defender for Cloud Apps
+
+---
+
 ## References
 
 - [MSDART - Token tactics: How to prevent, detect, and respond to cloud token theft](https://www.microsoft.com/en-us/security/blog/2022/11/16/token-tactics-how-to-prevent-detect-and-respond-to-cloud-token-theft/)
